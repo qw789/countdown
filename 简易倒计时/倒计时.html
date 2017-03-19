@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        background: #000;
+    }
+    
+    #timer {
+        width: 800px;
+        margin: 200px auto;
+        text-align: center;
+    }
+    
+    #timer div {
+        width: 100px;
+        height: 140px;
+        float: left;
+    }
+    
+    #timer div input {
+        width: 60px;
+        line-height: 40px;
+        border: 0;
+        font-size: 20px;
+    }
+    
+    #timer img {
+        width: 100px;
+        height: 100px;
+        display: inline-block;
+    }
+    
+    #btnBegin,#btnReset {
+        width: 100px;
+        height: 50px;
+        margin-top: 50px;
+        font-weight: bolder;
+        font-size: 16px;
+
+    }
+    
+    #timer p {
+        width: 100px;
+        height: 40px;
+        color: #fff;
+        line-height: 40px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="timer">
+	    <form action="" method="get" accept-charset="utf-8">
+	        <div>
+	            <p>请输入时数:</p><img src="images/0.png" /></div>
+	        <div>
+	            <input type="text" class="time" placeholder="00" /><img src="images/0.png" /></div>
+	        <div>
+	            <p></p><img src="images/00.png" /></div>
+	        <div>
+	            <p>请输入分数:</p><img src="images/0.png" /></div>
+	        <div>
+	            <input type="text" class="time" placeholder="00" /><img src="images/0.png" /></div>
+	        <div>
+	            <p></p><img src="images/00.png" /></div>
+	        <div>
+	            <p>请输入秒数:</p><img src="images/0.png" /></div>
+	        <div>
+	            <input type="text" class="time" placeholder="00" /><img src="images/0.png" /></div>
+	        <input type="button" value="开始" id="btnBegin">
+	        <input type="reset" name="重置" id="btnReset" />
+	   	</form>
+<!-- 	   	<div class="over">记时结束！</div> -->
+    </div>
+    <script>
+    window.onload = function() {
+        var aInput = document.getElementsByTagName("input");
+        var btnBegin = document.getElementById('btnBegin');
+        var imgAll = document.getElementsByTagName("img");
+        var btnReset = document.getElementById("btnReset");
+        var hh = 0,
+            mm = 0,
+            ss = 0;
+        var time = hh * 60 * 60 + mm * 60 + ss;
+        changePic(hh, mm, ss);
+        //btnBegin点击事件与input框失去焦点事件
+        btnBegin.onclick = aInput[0].onblur = function() {
+        	var _num = parseInt(aInput[0].value);
+        	if(_num>99){
+	          	hh = 99;
+	      	}else if(_num>=0&&_num<=99){
+	            hh = _num;
+	        }
+	        time = hh * 60 * 60 + mm * 60 + ss;
+            changePic(hh, mm, ss);
+        }
+       	btnBegin.onclick =  aInput[1].onblur = function() {
+			var _num = parseInt(aInput[1].value);
+        	if(_num>59){
+	          	mm = 59;
+	      	}else if(_num>=0&&_num<=99){
+	            mm = _num;
+	        }
+            time = hh * 60 * 60 + mm * 60 + ss;
+            changePic(hh, mm, ss);
+        }
+        btnBegin.onclick = aInput[2].onblur = function() {
+            var _num = parseInt(aInput[2].value);
+        	if(_num>59){
+	          	ss = 59;
+	      	}else if(_num>=0&&_num<=99){
+	            ss = _num;
+	        }
+            time = hh * 60 * 60 + mm * 60 + ss;
+            changePic(hh, mm, ss);
+        }
+        function format(num) {
+            return num < 10 ? "0" + num : num;
+        }
+        function changePic(h, m, s) {
+            var h = parseInt(time / 3600);
+            var m = parseInt((time - h * 3600) / 60);
+            var s = parseInt((time - h * 3600 - m * 60));
+            var str = format(h) + ":" + format(m) + ":" + format(s);
+            for (var i = 0; i < imgAll.length; i++) {
+                if (i == 2 || i == 5) {
+                    imgAll[i].src = "images/00.png";
+                } else {
+                    imgAll[i].src = "images/" + str[i] + ".png";
+                }
+            }
+        }
+        btnBegin.onclick = function() {
+        	if(btnBegin.value == "开始"){
+	            id = setInterval(show, 1000);
+	            btnBegin.value = "暂停";
+	        }else if(btnBegin.value == "暂停"){
+	        	clearInterval(id);
+	        	btnBegin.value = "开始";
+	        }
+        }
+        btnReset.onclick = function(){
+        	clearInterval(id);
+        	hh=0,mm=0,ss=0;
+        	time = hh * 60 * 60 + mm * 60 + ss;
+        	changePic(hh, mm, ss);
+        	btnBegin.value = "开始"; 
+        }
+        function show() {
+            --time;
+            changePic(hh, mm, ss);
+            if (time <= 0) {
+                clearInterval(id);
+                btnBegin.value = "开始";
+                for (var i = 0; i < 3; i++) {
+                	aInput[i].value = "";
+                }
+                alert("记时结束！")
+            }
+        }
+    }
+    </script>
+</body>
+
+</html>
